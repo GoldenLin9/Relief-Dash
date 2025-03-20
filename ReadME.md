@@ -1,51 +1,16 @@
 # Relief-Dash
 
-A dashboard application built with Django backend and React frontend.
+## Running the Application
 
-## Backend Setup
+1. Start both frontend and backend services:
 
-### Prerequisites
-- Python 3.x
-- pip
+```bash
+docker-compose up --build
+```
 
-## Installation
-1. Navigate to the backend directory:
-   ```
-   cd backend
-   ```
-
-2. Create a virtual environment:
-   ```
-   # On Windows
-   python -m venv venv
-
-   # On macOS/Linux
-   python3 -m venv venv
-   ```
-
-3. Activate the virtual environment:
-   ```
-   # On Windows
-   venv\Scripts\activate
-   
-   # On macOS/Linux
-   source venv/bin/activate
-   ```
-
-4. Build Docker image:
-   ```
-    docker build --tag django .
-   ```
-
-5. Run Docker container:
-   ```
-    docker run -p 8000:8000 django
-   ```
-
-
-## Frontend Setup (Coming Soon)
-
-The React frontend will be added in the future.
+2. Access the applications:
+   - Backend: http://localhost:8000
+   - Frontend: http://localhost:3000
 
 ## License
 
