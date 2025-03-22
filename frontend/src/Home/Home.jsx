@@ -1,36 +1,36 @@
 import { Link, useNavigate } from 'react-router-dom';
+import useAxiosInterceptor from '../hooks/useAxiosInterceptor';
 
 const Home = () => {
 
+    const axios = useAxiosInterceptor();
     const navigate = useNavigate();
 
     const handleLogout = async (e) => {
         e.preventDefault();
-
-        let bodyContent = {
+        
+        const response = await axios.post("/logout/", {
             "refresh": localStorage.getItem('refresh_token')
-        }
-
-        const response = await fetch('http://localhost:8000/logout/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(bodyContent)
         });
 
-        if (response.ok) {
-            console.log('Logout successful');
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('refresh_token');
-            
-            // Redirect to register page after successful logout
-            navigate('/register');
-            
-        } else {
-            console.error('Logout failed');
-            alert('Logout failed. Please try again.');
+        if (response.status === 205) {
+            console.log('Logout successful:', response.data);
         }
+        // Clear local storage
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('user');
+
+
+        navigate('/login');
+    }
+
+    const handleRetrieveUser = async (e) => {
+        e.preventDefault();
+
+        const response = await axios.get("/auth/users/me/");
+        let data = response.data;
+        console.log(data);
     }
 
     return (
@@ -41,6 +41,8 @@ const Home = () => {
             <p>Login Here: <Link to="/login">Login</Link></p>
             
             <button onClick = {handleLogout}>Logout</button>
+
+            <button onClick = {handleRetrieveUser}>Retrive User Info</button>
 
         </div>
     )

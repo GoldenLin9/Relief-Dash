@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import useAxiosInterceptor from "../hooks/useAxiosInterceptor";
 
 const Register = () => {
+
+    const axios = useAxiosInterceptor();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -13,16 +16,16 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const response = await fetch('http://localhost:8000/auth/users/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
+        // TODO: make a constants file for baseURL
+        let baseURL = 'http://localhost:8000/';
+        const response = await axios.post(`${baseURL}auth/users/`, {
+            username: formData.username,
+            email: formData.email,
+            password: formData.password
         });
 
-        let data = await response.json();
-        if (response.ok) {
+        let data = response.data;
+        if (response.status === 201) {
             console.log('Registration successful:', data);
             navigate('/login');
         } else {

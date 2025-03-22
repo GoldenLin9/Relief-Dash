@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -64,6 +65,17 @@ DJOSER = {
     'SERIALIZERS': {
         'user_create': 'users.serializers.CustomUserCreateSerializer',
     },
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(seconds=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=360),
+}
+
+REST_FRAMEWORK = {
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+       'rest_framework_simplejwt.authentication.JWTAuthentication',
+   ),
 }
 
 ROOT_URLCONF = 'relief_dash.urls'

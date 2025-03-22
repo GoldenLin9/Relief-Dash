@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 
 const Login = () => {
 
+    const { setAccessToken, setRefreshToken, setUser } = useAuth();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -13,24 +17,29 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const response = await fetch('http://localhost:8000/auth/jwt/create/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
+        // TODO: make a constants file for baseURL
+        let baseURL = 'http://localhost:8000/';
+        const response = await axios.post(`${baseURL}auth/jwt/create/`, {
+            username: formData.username,
+            password: formData.password
         });
 
-        let data = await response.json();
-        if (response.ok) {
-            console.log('Login successful:', data);
-            // Store the token or handle login success
+        let data = response.data;
+        if (response.status === 200) {
+            localStorage.setItem('access_token', data.access);
+            localStorage.setItem('refresh_token', data.refresh);
+            setAccessToken(data.access);
+            setRefreshToken(data.refresh);
 
-            // Redirect to home page after successful login
+            let user = jwtDecode(data.access);
+            localStorage.setItem('user', JSON.stringify(user));
+            setUser(user);
+
             navigate('/');
         } else {
             console.error('Login failed:', data);
             alert('Login failed. Please try again.');
+            console.log(data);
         }
     }
 

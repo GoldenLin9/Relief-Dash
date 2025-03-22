@@ -24,6 +24,7 @@ just run ```docker-compose up --build``` again, i've no idea why it happens
    2. If installed a package on the backend, run pip freeze > requirements.txt in the backend directory
    3. rerun ```docker-compose up --build``` to rebuild the docker images
    
+3. If dependencies don't seem to be syncing to container after adding them locally, run ```docker-compose down -v``` to remove volumes and then ```docker-compose up --build``` to rebuild the images
 
 ## License
 
